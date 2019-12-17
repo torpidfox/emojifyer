@@ -2,8 +2,6 @@ import psycopg2
 from collections import defaultdict
 
 def get_emojis(word_tuple):
-
-
     try:
         connection = psycopg2.connect(user = "postgres", password = "PzZIF5f0kjvR",
                 host = "emoji.cqppiab1dnlz.eu-central-1.rds.amazonaws.com",
@@ -17,22 +15,16 @@ def get_emojis(word_tuple):
         
         emojis = defaultdict()
         words = defaultdict()
-        word_emoji = defaultdict()
-        
+        word_emoji = defaultdict(list)
+
         for (word, emoji, w_count, e_count, w_e_count) in cursor.fetchall():
-            print(word, emoji, w_count, w_e_count)
             words[word] = w_count
-            print(words)
             emojis[emoji] = e_count
-            print(emojis)
+
             if word_emoji[word] is None:
                 word_emoji[word] = [(emoji, w_e_count)]
             else:
                 word_emoji[word].append((emoji, w_e_count))
-            print(word_emoji)
-        print(words)
-        print(emojis)
-        print(word_emoji)
 
         return words, emojis, word_emoji 
 
@@ -42,5 +34,3 @@ def get_emojis(word_tuple):
         if(connection):
             cursor.close()
             print("closed")
-
-
