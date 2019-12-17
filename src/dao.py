@@ -1,20 +1,51 @@
 import psycopg2
 from collections import defaultdict
 
+
+def connect():
+    return psycopg2.connect(user = "postgres", password = "PzZIF5f0kjvR",
+                host = "emoji.cqppiab1dnlz.eu-central-1.rds.amazonaws.com",
+                port = 5432, database = "emoji_database")
+
+   
+def get_word_count():
+    try:
+        connection = connect()
+        cursor = connection.cursor()
+        cursor.execute('''select sum(w.count) from words w''')
+        return cursor.fetchone()[0]
+    except Exception as error:
+        print(error)
+    finally:
+        if(connection):
+            cursor.close()
+            print("closed")
+
+def get_emoji_count():
+    try:
+        connection = connect()
+        cursor = connection.cursor()
+        cursor.execute('''select sum(e.count) from emojis e''')
+        return cursor.fetchone()[0]
+    except Exception as error:
+        print(error)
+    finally:
+        if(connection):
+            cursor.close()
+            print("closed")
+
+
 def get_emojis(word_tuple):
 
 
     try:
-        connection = psycopg2.connect(user = "postgres", password = "PzZIF5f0kjvR",
-                host = "emoji.cqppiab1dnlz.eu-central-1.rds.amazonaws.com",
-                port = 5432, database = "emoji_database")
-
+        connection = connect()
         cursor = connection.cursor()
         cursor.execute('''select w.value, e.value, w.count, e.count, w_e.count from words_emojis w_e
                 join words w on w_e.words_id = w.id
                 join emojis e on w_e.emojis_id = e.id
                 where w.value in {}'''.format(word_tuple))
-        
+             
         emojis = defaultdict()
         words = defaultdict()
         word_emoji = defaultdict()
