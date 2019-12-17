@@ -54,10 +54,10 @@ def get_emojis(word_tuple):
             words[word] = w_count
             emojis[emoji] = e_count
 
-            if word_emoji[word] is None:
-                word_emoji[word] = [(emoji, w_e_count)]
+            if word_emoji[emoji] is None:
+                word_emoji[emoji] = [(word, w_e_count)]
             else:
-                word_emoji[word].append((emoji, w_e_count))
+                word_emoji[emoji].append((word, w_e_count))
 
         return words, emojis, word_emoji 
 
