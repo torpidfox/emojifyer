@@ -3,7 +3,7 @@ from collections import defaultdict
 
 
 def connect():
-    return psycopg2.connect(user = "postgres", password = "PzZIF5f0kjvR",
+    return psycopg2.connect(user = "postgres", password = "",
                 host = "emoji.cqppiab1dnlz.eu-central-1.rds.amazonaws.com",
                 port = 5432, database = "emoji_database")
 
