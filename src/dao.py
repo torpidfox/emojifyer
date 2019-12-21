@@ -51,14 +51,16 @@ def _format_result(result):
 
     return words, emojis, word_emoji
 
-def get_emojis_for_word(word):
+def _get_emojis_for_word(word):
     try:
         connection = connect()
         cursor = connection.cursor()
+
         cursor.execute("""select w.value, e.value, w.count, e.count, w_e.count from words_emojis w_e
                 join words w on w_e.words_id = w.id
                 join emojis e on w_e.emojis_id = e.id
-                where w.value  = ({})""".format(word))
+                where w.value  = (%s);""", (word,))
+
         return _format_result(cursor.fetchall())      
 
     except Exception as error:
@@ -68,7 +70,7 @@ def get_emojis_for_word(word):
             cursor.close()
             print("closed")
 
-def get_emojis_for_words(word_tuple):
+def _get_emojis_for_words(word_tuple):
 
 
     try:
@@ -87,3 +89,9 @@ def get_emojis_for_words(word_tuple):
         if(connection):
             cursor.close()
             print("closed")
+
+def get_emojis(words):
+    if len(words) > 1:
+        return _get_emojis_for_words(words)
+    else:
+        return _get_emojis_for_word(words[0])
